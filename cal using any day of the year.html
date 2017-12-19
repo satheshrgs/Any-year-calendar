@@ -1,0 +1,145 @@
+<html>
+	<head>
+		<title>Calendar</title>
+		<style>
+			.hidden{display:none;}
+			.unhidden{display:block;}
+			#calendar table{display:inline;margin:10px;}
+			caption{font-weight:bold;color:red;}
+			.title{font-weight:bold;}
+		</style>
+		<script>
+			var d,done=0;
+			var k=0;
+			var da=["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+			var m=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+			function unhide(clickedButton, divID) 
+			{
+				var item = document.getElementById(divID);
+				if (item) 
+					if(item.className=='hidden')
+					{
+						item.className = 'unhidden' ;
+						clickedButton.value = 'Get Calendar'
+					}
+			}
+			function ct()
+			{   
+				var l;
+				var m=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+				var month=["JANUARY","FEBRURARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+				var dq=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+				for(k=0;k<12;k++)
+				{   l=0;
+					var tbl=document.createElement("table");
+					var cap=tbl.createCaption();
+					cap.innerHTML=month[k];
+					for(i=0;i<7;i++)
+					{
+						var rows=tbl.insertRow(i);						
+						for(j=0;j<7;j++)
+						    if(i!=0)
+							{
+								d=rows.insertCell(j);
+								d.id=m[k]+l;
+								l=l+1;
+							}
+							else
+							{
+								d=rows.insertCell(j);
+								var atts=document.createAttribute("style");
+								atts.value="font-weight:bold;";
+								d.setAttributeNode(atts);
+								d.innerHTML=dq[j];
+							}
+					 }
+				document.getElementById("calendar").appendChild(tbl);
+				} 	
+			}
+			function c()
+			{   
+			    var count=0,d,m;
+				var year=parseInt(document.getElementById("year").value);
+				var day=document.getElementById("day").value;
+				var month=document.getElementById("month").value;
+				var date=document.getElementById("date").value;
+				var mn=["jan","feb","mar","apr",",may","jun","jul","aug","sep","oct","nov","dec"];
+				var da=["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+				if ( year % 4 == 0 || year % 400 == 0)
+					d=[31,29,31,30,31,30,31,31,30,31,30,31];
+				if(year % 100 == 0 )
+					d=[31,28,31,30,31,30,31,31,30,31,30,31];
+				else if(!( year % 4 == 0 || year % 400 == 0))
+					d=[31,28,31,30,31,30,31,31,30,31,30,31];
+				for(i=0;i<12;i++)
+						if(month==mn[i])
+							m=i;
+				for(i=0;i<da.length;i++)
+					if(day==da[i])
+						daypos=i;
+				for(i=date;i<=d[m];i++)
+					count++;
+				val=((count%7)+daypos)%7;
+				day=da[val];
+				for(i=m+1;i<12;i++)
+					day=v1(day,d[i],i);
+				for(i=0;i<da.length;i++)
+					if(day==da[i])
+						daypos=i;
+				done=1;
+				if ( year % 4 == 0 || year % 400 == 0)
+					v=2;
+				if(year % 100 == 0)
+					v=1;
+				else if(!( year % 4 == 0 || year % 400 == 0))
+					v=1;
+				if((daypos>=1)&&(v==1))
+					daypos=daypos-1;
+				else if((daypos>=2)&&(v==2))
+					daypos=daypos-2;
+				else if((daypos==1)&&(v==2))
+					daypos=6;
+				else if((daypos==0)&&(v==2))
+					daypos=5;
+				day=da[daypos];
+				for(i=0;i<12;i++)
+					day=v1(day,d[i],i);
+				return false;
+			}
+			function v1(days,no,n)
+			{
+			    var i,j,pos,k=0;
+				for(j=0;j<da.length;j++)
+					if(days==da[j])
+						pos=j;
+				if(done==1)
+					for(i=pos;i<no+pos;i++)
+						document.getElementById(m[n]+i).innerHTML=++k;
+			    return da[(no+pos)%7];
+			}
+		window.onload=ct;
+		</script>
+	</head>
+	<body bgcolor="powderblue">
+		<center>
+			<h2 color="green">Calendar</h2>
+			<hr><br><br><br>
+			<form name="cal" onsubmit="return c()" method="post">
+				<table>
+					<tr>
+						<td>Year</td>
+						<td><input type="text" id="year" placeholder="1992"></td>
+					</tr>
+					<tr>
+						<td colspan="2">Day@<input type="text" id="month" placeholder="dec"><input type="text" id="date" placeholder="23"><input type="text" id="day" placeholder="wednesday"></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input type="submit" value="Get Calendar" onclick="unhide(this, 'calendar') "></td>
+					</tr>
+				</table>
+			</form>
+		</center>
+		<div id="calendar" class="hidden">
+		</div>
+		</body>
+</html>
